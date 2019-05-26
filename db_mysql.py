@@ -29,35 +29,6 @@ def commit():
 def escapeString(string):
     return MySQLdb.escape_string(string);
 
-# def insertOpini(data):
-#     var_content       = data['content'];
-#     var_time          = data['time'];
-#     var_location      = data['location'];
-#     var_sosmed_source = data['sosmed'];
-#     var_user          = data['user'];
-#     var_keyword       = data['keyword'];
-#     var_sentiment     = data['sentiment'];
-
-#     sql = '''INSERT INTO opini(sentiment,content,time,location,sosmed_source,user,keyword) 
-#             VALUES ('%s','%s','%s','%s','%d','%s','%s')''' \
-#             % (var_sentiment, var_content, var_time, var_location, var_sosmed_source, var_user, var_keyword);
-#     cursor.execute(sql);
-#     db.commit()
-
-# def insertOpini2(data,sentiment):
-#     var_content       = MySQLdb.escape_string(data['content']);
-#     var_time          = data['time'];
-#     var_location      = data['location'];
-#     var_sosmed_source = data['sosmed'];
-#     var_user          = data['user'];
-#     var_keyword       = data['keyword'];
-
-#     sql = '''INSERT INTO opini(sentiment,content,time,location,sosmed_source,user,keyword) 
-#             VALUES ('%s','%s','%s','%s','%d','%s','%s')''' \
-#             % (sentiment,var_content, var_time, var_location, var_sosmed_source, var_user, var_keyword);
-#     cursor.execute(sql);
-#     db.commit()
-
 def existSentimentalWord(word):
     sql = '''SELECT * 
                 FROM memory_word
@@ -66,20 +37,13 @@ def existSentimentalWord(word):
     cursor.execute(sql);
     return cursor.fetchone();
 
-def existSentimentalWordMainObject(word,idApps=None):
-    if(idApps != None):
-        if(idApps == 'eval'):
-            sql = '''SELECT * 
-                        FROM eval_memory_word
-                        WHERE word="%s" AND value is not NULL''' \
-                        % (word);
-        else:
-            sql = '''SELECT * 
-                        FROM apps_memory_word
-                        WHERE word="%s" AND id_apps=%d AND value is not NULL''' \
-                        % (word,idApps);
-        cursor.execute(sql);
-        return cursor.fetchone();
+def existSentimentalWordMainObject(word):
+    sql = '''SELECT * 
+                FROM apps_memory_word
+                WHERE word="%s" AND value is not NULL''' \
+                % (word);
+    cursor.execute(sql);
+    return cursor.fetchone();
 
 def existOtherKamus(word):
     sql = '''SELECT * 
@@ -118,41 +82,6 @@ def existStoplist(word):
     cursor.execute(sql);
     return cursor.fetchone();
 
-def migrasi():
-    sql = '''SELECT * 
-                FROM tb_katadasar''';
-    cursor.execute(sql);
-    result = cursor.fetchall();
-    return result;
-
-def updateMigrasi(id,new_val):
-    sql = '''UPDATE tb_katadasar SET value=%d 
-            WHERE id=%d ''' % (new_val,id);
-    cursor.execute(sql);
-    db.commit()
-
-# def insertOldTweet(data):
-#     var_content       = data['content'];
-#     var_time          = data['time'];
-#     var_keyword       = data['keyword'];
-#     db_dict = {'content':var_content, 'time':var_time, 'keyword':var_keyword};
-#     sql = "INSERT INTO old_opini(text,time,keyword) VALUES (%(content)s,%(time)s,%(keyword)s)";
-#     cursor.execute(sql, db_dict);
-#     db.commit()
-
-# def insertWord(word):
-#     var_word       = word;
-#     db_dict = {'word':var_word};
-#     sql = "INSERT INTO mining_dict(word) VALUES (%(word)s)";
-#     cursor.execute(sql, db_dict);
-
-# def getAllDict():
-#     sql = '''SELECT * 
-#                 FROM mining_dict_en''';
-#     cursor.execute(sql);
-#     result = cursor.fetchall();
-#     return result;
-
 def getMemoryGroupWord():
     sql = '''SELECT word 
                 FROM memory_word WHERE word LIKE "% %"''';
@@ -166,11 +95,3 @@ def getOtherMemoryGroupWord():
     cursor.execute(sql);
     result = cursor.fetchall();
     return result;
-
-# def checkExistSentiwn(word):
-#     sql = '''SELECT * 
-#                 FROM sentiwn_en
-#                 WHERE word="%s"''' \
-#                 % (word);
-#     cursor.execute(sql);
-#     return cursor.fetchone();
